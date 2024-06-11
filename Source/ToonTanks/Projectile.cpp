@@ -37,34 +37,27 @@ void AProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectile::OnHit(UPrimitiveComponent *HitComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, FVector NormalImpulse, const FHitResult &Hit)
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	AActor* MyOwner = GetOwner();
-	if (MyOwner == nullptr)
-	{
-		Destroy();
+	AActor* ProjectileOwner = GetOwner();
+	if (ProjectileOwner == nullptr)
 		return;
-	}
 
-	AController* MyOwnerInstigator = MyOwner->GetInstigatorController();
+	AController* OwnerInstigator = ProjectileOwner->GetInstigatorController();
 	UClass* DamageTypeClass = UDamageType::StaticClass();
 
-	if (OtherActor && OtherActor != this && OtherActor != MyOwner)
+	if (OtherActor && OtherActor != this && OtherActor != ProjectileOwner)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwnerInstigator, this, DamageTypeClass);
+		UGameplayStatics::ApplyDamage(OtherActor, DamageAmt, OwnerInstigator, this, DamageTypeClass);
 		if (HitParticles)
-		{
 			UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
-		}
+
 		if (HitSound)
-		{
 			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-		}
+
 		if (HitCameraShakeClass)
-		{
-			// UE 4.25 - ClientPlayCameraShake; UE 4.26+ ClientStartCameraShake
-			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(HitCameraShakeClass);
-		}
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
+
 	Destroy();
 }

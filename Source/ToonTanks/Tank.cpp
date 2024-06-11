@@ -37,7 +37,7 @@ void ATank::Tick(float DeltaTime)
             false, 
             HitResult);
 
-        RotateTurret(HitResult.ImpactPoint);
+        RotateTurret(HitResult.ImpactPoint, DeltaTime);
     }
 }
 
@@ -61,7 +61,6 @@ void ATank::Move(float Value)
     FVector DeltaLocation = FVector::ZeroVector;
     DeltaLocation.X = Value * Speed * UGameplayStatics::GetWorldDeltaSeconds(this);
     AddActorLocalOffset(DeltaLocation, true);
-    
 }
 
 void ATank::Turn(float Value)
@@ -69,5 +68,4 @@ void ATank::Turn(float Value)
     FRotator DeltaRotation = FRotator::ZeroRotator;
     DeltaRotation.Yaw = Value * TurnRate * UGameplayStatics::GetWorldDeltaSeconds(this);
     AddActorLocalRotation(DeltaRotation, true);
-    GetController();
 }

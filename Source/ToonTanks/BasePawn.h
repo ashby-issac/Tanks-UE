@@ -16,7 +16,7 @@ public:
 	void HandleDestruction();
 
 protected:
-	void RotateTurret(FVector LookAtTarget);
+	void RotateTurret(FVector LookAtTarget, float DeltaTime);
 	void Fire();
 
 private:
@@ -37,6 +37,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	class UParticleSystem *DeathParticles;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float TurretRotSpeed = 50.f;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	class USoundBase *DeathSound;

@@ -5,6 +5,7 @@
 #include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ABasePawn::ABasePawn()
 {
@@ -25,29 +26,23 @@ ABasePawn::ABasePawn()
 
 void ABasePawn::HandleDestruction()
 {
-	// VFX/SFX
 	if (DeathParticles)
-	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation(), GetActorRotation());
-	}
 
 	if (DeathSound)
-	{
 		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
-	}
 
 	if (DeathCameraShakeClass)
-	{
-		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(DeathCameraShakeClass);
-	}
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathCameraShakeClass);
 }
 
-void ABasePawn::RotateTurret(FVector LookAtTarget)
+void ABasePawn::RotateTurret(FVector TartgetLocation, float DeltaTime)
 {
-	FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
-	FRotator LookAtRotation = FRotator(0.f, ToTarget.Rotation().Yaw, 0.f);
+	FVector TargetDir = TartgetLocation - TurretMesh->GetComponentLocation();
+	FRotator LookAtRotation = FRotator(0.f, TargetDir.Rotation().Yaw, 0.f);
+	FRotator UpdatedRot = FMath::RInterpTo(TurretMesh->GetComponentRotation(), LookAtRotation, DeltaTime, TurretRotSpeed);
 	
-	TurretMesh->SetWorldRotation(LookAtRotation);
+	TurretMesh->SetWorldRotation(UpdatedRot);
 }
 
 void ABasePawn::Fire()

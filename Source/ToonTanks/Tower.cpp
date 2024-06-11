@@ -6,48 +6,43 @@
 
 void ATower::HandleDestruction()
 {
-    Super::HandleDestruction();
-    Destroy();
+	Super::HandleDestruction();
+	Destroy();
 }
 
 void ATower::BeginPlay()
 {
-    Super::BeginPlay();
+	Super::BeginPlay();
 
-    Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
+	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
-    GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
 }
 
 void ATower::Tick(float DeltaTime)
 {
-    Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);
 
-    if (InFireRange() && Tank)
-    {
-        RotateTurret(Tank->GetActorLocation());
-    }
+	if (InFireRange() && Tank)
+	{
+		RotateTurret(Tank->GetActorLocation(), DeltaTime);
+	}
 }
 
 void ATower::CheckFireCondition()
 {
-    if (!Tank)
-    {
-        return;
-    }
+	if (!Tank)
+	{
+		return;
+	}
 
-    if (InFireRange() && Tank->bAlive)
-    {
-        Fire();
-    }
+	if (InFireRange() && Tank->bAlive)
+	{
+		Fire();
+	}
 }
 
 bool ATower::InFireRange()
 {
-    if (Tank)
-    {
-        return FVector::Dist(GetActorLocation(), Tank->GetActorLocation()) <= FireRange;
-    }
-
-    return false;
+	return Tank && FVector::Dist(GetActorLocation(), Tank->GetActorLocation()) <= FireRange;
 }

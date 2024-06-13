@@ -39,7 +39,7 @@ private:
 	class UParticleSystem *DeathParticles;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	float TurretRotSpeed = 50.f;
+	float TurretRotSpeed = 10.f;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	class USoundBase *DeathSound;

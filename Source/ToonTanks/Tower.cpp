@@ -4,29 +4,29 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 
-void ATower::HandleDestruction()
-{
-	Super::HandleDestruction();
-	Destroy();
-}
-
 void ATower::BeginPlay()
 {
 	Super::BeginPlay();
 
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
-	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ThisClass::CheckFireCondition, FireRate, true);
 }
 
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (InFireRange() && Tank)
+	if (InFireRange())
 	{
 		RotateTurret(Tank->GetActorLocation(), DeltaTime);
 	}
+}
+
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+	Destroy();
 }
 
 void ATower::CheckFireCondition()

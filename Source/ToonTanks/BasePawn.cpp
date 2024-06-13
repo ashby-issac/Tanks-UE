@@ -36,9 +36,9 @@ void ABasePawn::HandleDestruction()
 		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathCameraShakeClass);
 }
 
-void ABasePawn::RotateTurret(FVector TartgetLocation, float DeltaTime)
+void ABasePawn::RotateTurret(FVector TargetLocation, float DeltaTime)
 {
-	FVector TargetDir = TartgetLocation - TurretMesh->GetComponentLocation();
+	FVector TargetDir = TargetLocation - TurretMesh->GetComponentLocation();
 	FRotator LookAtRotation = FRotator(0.f, TargetDir.Rotation().Yaw, 0.f);
 	FRotator UpdatedRot = FMath::RInterpTo(TurretMesh->GetComponentRotation(), LookAtRotation, DeltaTime, TurretRotSpeed);
 	
